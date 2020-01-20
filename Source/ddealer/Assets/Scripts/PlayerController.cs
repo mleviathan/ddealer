@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float _jumpForce = 200.0f;
-
+    private float _jumpForce = 300.0f;
     private bool _isDead = false;
     private bool _isJumping = true;
     private Rigidbody2D _playerRigidBody;
@@ -31,12 +30,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject.name == "Floor" && _isJumping)
+        if (collision.collider.gameObject.CompareTag("Floor") && _isJumping)
         {
             _isJumping = false;
         }
 
-        if (collision.collider.gameObject.name == "Obstacle" || collision.collider.gameObject.name == "Enemy")
+        if (collision.collider.gameObject.CompareTag("Enemy"))
         {
             Die();
         }
@@ -52,7 +51,5 @@ public class PlayerController : MonoBehaviour
         _isJumping = true;
         _playerRigidBody.velocity = Vector2.zero;
         _playerRigidBody.AddForce(new Vector2(0, _jumpForce));
-
-        FindObjectOfType<EnemyController>().OnExecute("Jump");
     }
 }
