@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public GameObject Obstacle;
     private float _jumpForce = 300.0f;
     private bool _isDead = false;
     private bool _isJumping = true;
@@ -29,9 +30,6 @@ public class PlayerController : MonoBehaviour
         if (_isDead)
             return;
 
-        if (!_isSlowing)
-            FreezePosX();
-
         if (Input.GetKeyDown(KeyCode.Space) && !_isJumping)
             Jump();
     }
@@ -50,8 +48,9 @@ public class PlayerController : MonoBehaviour
 
         if (collision.collider.gameObject.CompareTag("Obstacle"))
         {
-            Debug.Log("Started slowing");
-            StartCoroutine("Slow");
+            _isSlowing = true;
+            var obstacleSize = Obstacle.GetComponent<BoxCollider2D>().size.x;
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x + obstacleSize, gameObject.transform.position.y, 0);
         }
     }
 
@@ -67,22 +66,9 @@ public class PlayerController : MonoBehaviour
         _playerRigidBody.AddForce(new Vector2(0, _jumpForce));
     }
 
-    private IEnumerable Slow()
-    {
-        _isSlowing = true;
-        Debug.Log("Started slowing");
-        yield return new WaitForSeconds(1f);
-        _isSlowing = false;
-        Debug.Log("Stopped slowing");
-    }
-
     private void FreezePosX()
     {
-        var position = gameObject.transform.position;
-
-        if (position.x != _initialX)
-        {
-            gameObject.transform.position = new Vector3(_initialX, gameObject.transform.position.y, 0);
-        }
+        if (GetComponent<Rigidbody2D>().constraints != RigidbodyConstraints2D.FreezePositionX)
+            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;
     }
 }

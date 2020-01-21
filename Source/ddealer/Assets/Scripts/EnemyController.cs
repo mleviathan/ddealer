@@ -32,8 +32,7 @@ public class EnemyController : MonoBehaviour
         if (collision.collider.gameObject.CompareTag("Floor") && _isJumping)
             _isJumping = false;
 
-        //if (collision.collider.gameObject.name == "Jumper" && collision.collider.isTrigger && !_isJumping)
-        if (collision.collider.gameObject.name == "Jumper")
+        if (collision.collider.gameObject.CompareTag("Jumper"))
             Jump();
     }
 

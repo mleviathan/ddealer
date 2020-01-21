@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Floor
   - Obstacle
+  - Jumper
   layers:
   - Default
   - TransparentFX
