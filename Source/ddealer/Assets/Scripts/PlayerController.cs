@@ -8,7 +8,14 @@ public class PlayerController : MonoBehaviour
     private float _jumpForce = 300.0f;
     private bool _isDead = false;
     private bool _isJumping = true;
+    private bool _isSlowing = false;
     private Rigidbody2D _playerRigidBody;
+    private float _initialX;
+
+    private void Awake()
+    {
+        _initialX = gameObject.transform.position.x;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -22,10 +29,11 @@ public class PlayerController : MonoBehaviour
         if (_isDead)
             return;
 
-        if (Input.GetMouseButtonDown(0) && !_isJumping)
-        {
+        if (!_isSlowing)
+            FreezePosX();
+
+        if (Input.GetKeyDown(KeyCode.Space) && !_isJumping)
             Jump();
-        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -39,6 +47,12 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
+
+        if (collision.collider.gameObject.CompareTag("Obstacle"))
+        {
+            Debug.Log("Started slowing");
+            StartCoroutine("Slow");
+        }
     }
 
     private void Die()
@@ -49,7 +63,26 @@ public class PlayerController : MonoBehaviour
     private void Jump()
     {
         _isJumping = true;
-        _playerRigidBody.velocity = Vector2.zero;
+        //_playerRigidBody.velocity = Vector2.zero;
         _playerRigidBody.AddForce(new Vector2(0, _jumpForce));
+    }
+
+    private IEnumerable Slow()
+    {
+        _isSlowing = true;
+        Debug.Log("Started slowing");
+        yield return new WaitForSeconds(1f);
+        _isSlowing = false;
+        Debug.Log("Stopped slowing");
+    }
+
+    private void FreezePosX()
+    {
+        var position = gameObject.transform.position;
+
+        if (position.x != _initialX)
+        {
+            gameObject.transform.position = new Vector3(_initialX, gameObject.transform.position.y, 0);
+        }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ScrollingBehaviour : MonoBehaviour
 {
-    public const float SCROLL_SPEED = -3f;
+    public float ScrollSpeed = -3f;
 
     private Rigidbody2D _floorRigidBody;
 
@@ -12,7 +12,7 @@ public class ScrollingBehaviour : MonoBehaviour
     void Start()
     {
         _floorRigidBody = GetComponent<Rigidbody2D>();
-        _floorRigidBody.velocity = new Vector2(SCROLL_SPEED, 0);
+        _floorRigidBody.velocity = new Vector2(ScrollSpeed, 0);
     }
 
     // Update is called once per frame
