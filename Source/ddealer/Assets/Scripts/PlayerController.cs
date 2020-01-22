@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameObject Obstacle;
+    private GameObject _obstacle;
     private bool _isDead = false;
     private bool _isJumping = true;
     private bool _isSlowing = false;
@@ -38,20 +38,21 @@ public class PlayerController : MonoBehaviour
             _isJumping = false;
         }
 
-        if (collision.collider.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy"))
         {
             Die();
         }
 
-        if (collision.collider.gameObject.CompareTag("Obstacle"))
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
+            _obstacle = collision.gameObject;
             JumpObstacleAndSlow();
         }
     }
 
     private void JumpObstacleAndSlow()
     {
-        var obstacleSize = Obstacle.GetComponent<BoxCollider2D>().size.x;
+        var obstacleSize = _obstacle.GetComponent<BoxCollider2D>().size.x;
         gameObject.transform.position = new Vector3(gameObject.transform.position.x + obstacleSize, gameObject.transform.position.y, 0);
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
         StartCoroutine("ReactivateFreezePosX");

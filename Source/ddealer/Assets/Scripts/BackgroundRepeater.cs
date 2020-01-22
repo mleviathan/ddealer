@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BackgroundRepeater : MonoBehaviour
 {
+    public GameObject[] Patterns;
+
     private BoxCollider2D _groundCollider;        
     private float _groundHorizontalLength;        
 
@@ -28,5 +30,27 @@ public class BackgroundRepeater : MonoBehaviour
         Vector2 groundOffSet = new Vector2(_groundHorizontalLength * 2f, 0);
 
         transform.position = (Vector2)transform.position + groundOffSet;
+
+        SpawnRandomObstacles();
+    }
+
+    private void SpawnRandomObstacles()
+    {
+        CleanSceneFromObstacles();
+
+        var rand = Random.Range(0, Patterns.Length);
+
+        Instantiate(Patterns[rand], new Vector3(26f, 0.6f), Quaternion.identity);
+    }
+
+    private void CleanSceneFromObstacles()
+    {
+        var objs = FindObjectsOfType<BoxCollider2D>();
+
+        foreach(var obj in objs)
+        {
+            if (obj.gameObject.CompareTag("Obstacle"))
+                Destroy(obj);
+        }
     }
 }
