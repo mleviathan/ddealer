@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Enemy
-  - Floor
-  - Obstacle
   - Jumper
+  - Floor
+  - Enemy
+  - Obstacle
   layers:
   - Default
   - TransparentFX
@@ -46,11 +46,11 @@ TagManager:
     uniqueID: 0
     locked: 0
   - name: Background
-    uniqueID: 3550825863
+    uniqueID: 3736951837
     locked: 0
   - name: Midground
-    uniqueID: 2722217329
+    uniqueID: 2126781599
     locked: 0
   - name: Foreground
-    uniqueID: 4280673167
+    uniqueID: 1593741275
     locked: 0
