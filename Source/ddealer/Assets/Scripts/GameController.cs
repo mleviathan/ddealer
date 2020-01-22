@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
-    public bool GameOver { get; set; }
     public static GameController Instance { get => _instance; }
+    public bool GameOver { get; set; }
+
+    public float ScrollSpeed;
+    public float JumpForce;
     private static GameController _instance;
 
     private void Awake()

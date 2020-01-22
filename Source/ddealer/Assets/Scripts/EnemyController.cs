@@ -1,11 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
     private bool _isJumping = true;
-    private float _jumpForce = 300.0f;
     private Rigidbody2D _enemyRigidBody;
     private float _initialX;
 
@@ -24,32 +21,25 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        FreezePosX();
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.gameObject.CompareTag("Floor") && _isJumping)
             _isJumping = false;
+    }
 
-        if (collision.collider.gameObject.CompareTag("Jumper"))
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!_isJumping)
             Jump();
     }
 
     private void Jump()
     {
-        _isJumping = true;
         _enemyRigidBody.velocity = Vector2.zero;
-        _enemyRigidBody.AddForce(new Vector2(0, _jumpForce));
+        _enemyRigidBody.AddForce(new Vector2(0, GameController.Instance.JumpForce));
+        _isJumping = true;
     }
 
-    private void FreezePosX()
-    {
-        var position = gameObject.transform.position;
-
-        if (position.x != _initialX)
-        {
-            gameObject.transform.position = new Vector3(_initialX, gameObject.transform.position.y, 0);
-        }
-    }
 }
