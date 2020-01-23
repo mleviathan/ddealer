@@ -6,7 +6,6 @@ public class PlayerController : MonoBehaviour
     private GameObject _obstacle;
     private bool _isDead = false;
     private bool _isJumping = true;
-    private bool _isSlowing = false;
     private Rigidbody2D _playerRigidBody;
     private float _initialX;
 

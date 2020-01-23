@@ -36,21 +36,8 @@ public class BackgroundRepeater : MonoBehaviour
 
     private void SpawnRandomObstacles()
     {
-        CleanSceneFromObstacles();
-
         var rand = Random.Range(0, Patterns.Length);
 
         Instantiate(Patterns[rand], new Vector3(26f, 0.6f), Quaternion.identity);
-    }
-
-    private void CleanSceneFromObstacles()
-    {
-        var objs = FindObjectsOfType<BoxCollider2D>();
-
-        foreach(var obj in objs)
-        {
-            if (obj.gameObject.CompareTag("Obstacle"))
-                Destroy(obj);
-        }
     }
 }
