@@ -29,17 +29,19 @@ public class EnemyController : MonoBehaviour
             _isJumping = false;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         if (!_isJumping)
+        {
+            _isJumping = true;
             Jump();
+        }
     }
 
     private void Jump()
     {
         _enemyRigidBody.velocity = Vector2.zero;
         _enemyRigidBody.AddForce(new Vector2(0, GameController.Instance.JumpForce));
-        _isJumping = true;
     }
 
 }
