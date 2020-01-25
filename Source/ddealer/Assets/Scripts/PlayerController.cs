@@ -6,12 +6,16 @@ public class PlayerController : MonoBehaviour
     private GameObject _obstacle;
     private bool _isDead = false;
     private bool _isJumping = true;
+    private bool _isSlowing = false;
     private Rigidbody2D _playerRigidBody;
     private float _initialX;
+    private SpriteRenderer _spriteRenderer;
+    private Coroutine _fadingRoutine;
 
     private void Awake()
     {
         _initialX = gameObject.transform.position.x;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Start is called before the first frame update
@@ -26,7 +30,7 @@ public class PlayerController : MonoBehaviour
         if (_isDead)
             return;
 
-        if (Input.GetKeyDown(KeyCode.Space) && !_isJumping)
+        if (Input.GetKeyDown(KeyCode.Space) && !_isJumping && !_isSlowing)
             Jump();
     }
 
@@ -41,32 +45,62 @@ public class PlayerController : MonoBehaviour
         {
             Die();
         }
+    }
 
-        if (collision.gameObject.CompareTag("Obstacle"))
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Obstacle") && !_isSlowing)
         {
             _obstacle = collision.gameObject;
-            JumpObstacleAndSlow();
+            Slow();
         }
     }
 
-    private void JumpObstacleAndSlow()
+    /// <summary>
+    /// MAkes the player fall back disabling the Pos X constraint on the rigidbody
+    /// </summary>
+    private void Slow()
     {
-        var obstacleSize = _obstacle.GetComponent<BoxCollider2D>().size.x;
-        gameObject.transform.position = new Vector3(gameObject.transform.position.x + obstacleSize, gameObject.transform.position.y, 0);
         GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
-        StartCoroutine("ReactivateFreezePosX");
+        _isSlowing = true;
+        _fadingRoutine = StartCoroutine(InvincibilityFade());
+        Invoke("FreezePosX", 1f);
     }
 
-    IEnumerable ReactivateFreezePosX()
+    /// <summary>
+    /// Create some sort of "blink" by fading in and out really fast
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator InvincibilityFade()
     {
-        yield return new WaitForSeconds(1f);
-        FreezePosX();
-        StopAllCoroutines();
+        for (; ; )
+        {
+            Color c = _spriteRenderer.color;
+            if (c.a > 0)
+            {
+                for (float ft = 1f; ft >= 0; ft -= 0.1f)
+                {
+                    c.a = ft;
+                    _spriteRenderer.color = c;
+                    yield return null;
+                }
+            }
+            else
+            {
+                for (float ft = 0.1f; ft <= 1; ft += 0.1f)
+                {
+                    c.a = ft;
+                    _spriteRenderer.color = c;
+                    yield return null;
+                }
+            }
+        }
     }
 
     private void Die()
     {
         _isDead = true;
+        UIManager.Instance.ShowDeathMenu();
         GameController.Instance.GameOver = true;
     }
 
@@ -77,9 +111,26 @@ public class PlayerController : MonoBehaviour
         _isJumping = true;
     }
 
+    /// <summary>
+    /// Reenable player input and Pos X constraint
+    /// </summary>
     private void FreezePosX()
     {
         if (GetComponent<Rigidbody2D>().constraints != RigidbodyConstraints2D.FreezePositionX)
             GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;
+
+        _isSlowing = false;
+        StopCoroutine(_fadingRoutine);
+        
+    }
+
+    private void ResetSpriteAlpha()
+    {
+        if (_spriteRenderer.color.a != 1f)
+        {
+            Color color = _spriteRenderer.color;
+            color.a = 1f;
+            _spriteRenderer.color = color;
+        }
     }
 }

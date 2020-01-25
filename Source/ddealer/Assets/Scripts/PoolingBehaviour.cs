@@ -21,7 +21,8 @@ public class PoolingBehaviour : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.name.Contains("Obstacle"))
-            Destroy(collision.gameObject.transform.parent.gameObject);
+        var collidedObj = collision.gameObject;
+        if (collidedObj.name.Contains("Obstacle") || collidedObj.name.Contains("House"))
+            Destroy(collidedObj.transform.parent.gameObject);
     }
 }
