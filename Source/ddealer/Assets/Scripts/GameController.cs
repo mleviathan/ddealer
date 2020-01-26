@@ -38,7 +38,8 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        UIManager.Instance.SetBackpackText(_backpack);
+        UIManager.Instance.SetScoreText(_score);
     }
 
     // Update is called once per frame
