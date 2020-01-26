@@ -31,7 +31,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        if (!_isJumping)
+        if (!_isJumping && collision.gameObject.name.Contains("Jumper"))
         {
             _isJumping = true;
             Jump();
