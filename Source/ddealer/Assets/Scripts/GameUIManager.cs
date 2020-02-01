@@ -4,10 +4,10 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class UIManager : MonoBehaviour
+public class GameUIManager : MonoBehaviour
 {
-    public static UIManager Instance { get => _instance; }
-    private static UIManager _instance;
+    public static GameUIManager Instance { get => _instance; }
+    private static GameUIManager _instance;
 
     [SerializeField]
     private TextMeshProUGUI _backpackText;
@@ -19,13 +19,9 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         if (_instance == null)
-        {
             _instance = this;
-        }
         else if (_instance != this)
-        {
             Destroy(gameObject);
-        }
     }
 
     public void SetBackpackText(int quantity)

@@ -100,7 +100,7 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         _isDead = true;
-        UIManager.Instance.ShowDeathMenu();
+        GameUIManager.Instance.ShowDeathMenu();
         GameController.Instance.GameOver = true;
     }
 

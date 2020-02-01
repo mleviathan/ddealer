@@ -38,8 +38,8 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        UIManager.Instance.SetBackpackText(_backpack);
-        UIManager.Instance.SetScoreText(_score);
+        GameUIManager.Instance.SetBackpackText(_backpack);
+        GameUIManager.Instance.SetScoreText(_score);
     }
 
     // Update is called once per frame
@@ -64,8 +64,8 @@ public class GameController : MonoBehaviour
                     Destroy(hit.collider.gameObject);
                     _backpack -= 1;
                     _score += 1;
-                    UIManager.Instance.SetBackpackText(_backpack);
-                    UIManager.Instance.SetScoreText(_score);
+                    GameUIManager.Instance.SetBackpackText(_backpack);
+                    GameUIManager.Instance.SetScoreText(_score);
                 }
             }
         }
@@ -122,8 +122,8 @@ public class GameController : MonoBehaviour
     {
         _backpack -= 1;
         _score += 1;
-        UIManager.Instance.SetBackpackText(_backpack);
-        UIManager.Instance.SetScoreText(_score);
+        GameUIManager.Instance.SetBackpackText(_backpack);
+        GameUIManager.Instance.SetScoreText(_score);
     }
 
 }

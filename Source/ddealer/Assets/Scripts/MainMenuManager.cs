@@ -2,6 +2,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -43,7 +44,7 @@ public class MainMenuManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     /// <summary>
@@ -75,14 +76,25 @@ public class MainMenuManager : MonoBehaviour
             nameTextBox.text = item.Name;
             descTextBox.text = item.Description;
             //image.sprite = 
-            if (item.Bought)
+            if (item.Status >= ShopItemModel.ItemStatus.Bought 
+                && item.Category != ShopItemModel.ItemCategory.Drug)
                 Destroy(buyButtonObj);
             else
                 buyTextBox.text = $"Buy for {item.Cost}";
 
-            if (item.Equipped)
+            if (item.Status == ShopItemModel.ItemStatus.Equipped ||
+                item.Category == ShopItemModel.ItemCategory.Drug)
                 equipButtonObj.SetActive(false);
         }
+    }
+
+    public void BuyItem(int id)
+    {
+        ShopItemModel item = PrefsHelper.ShopItems.First((it) => it.Id == id);
+        PrefsHelper.ShopItems.Remove(item);
+        PrefsHelper.Money -= item.Cost;
+        item.Status = ShopItemModel.ItemStatus.Bought;
+        PrefsHelper.ShopItems.Add(item);
     }
 
     #region Animation callbacks
