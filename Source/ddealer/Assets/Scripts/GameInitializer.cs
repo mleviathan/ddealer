@@ -23,7 +23,7 @@ public class GameInitializer {
     /// </summary>
     public void InitializePlayerValues()
     {
-        PrefsHelper.Money = 0;
+        AppData.Instance.Money = 100;
     }
 
     /// <summary>
@@ -51,9 +51,10 @@ public class GameInitializer {
             Description = "The first thing you'll sell",
             Image = "",
             Category = ShopItemModel.ItemCategory.Drug,
-            Status = ShopItemModel.ItemStatus.Equipped,
+            Status = ShopItemModel.ItemStatus.Bought,
             Doses = 10,
-            SellingPrice = 10
+            SellingPrice = 10,
+            OwnedDoses = 0
         };
         drugs.Add(weed);
         ShopItemModel coke = new ShopItemModel
@@ -66,7 +67,8 @@ public class GameInitializer {
             Category = ShopItemModel.ItemCategory.Drug,
             Status = ShopItemModel.ItemStatus.None,
             Doses = 10,
-            SellingPrice = 50
+            SellingPrice = 50,
+            OwnedDoses = 0
         };
         drugs.Add(coke);
         return drugs;
@@ -83,7 +85,8 @@ public class GameInitializer {
             Description = "Your first backpack which contains 20 items",
             Image = "",
             Status = ShopItemModel.ItemStatus.Equipped,
-            Category = ShopItemModel.ItemCategory.Backpack
+            Category = ShopItemModel.ItemCategory.Backpack,
+            Load = 10
         };
         backpacks.Add(starter);
         return backpacks;

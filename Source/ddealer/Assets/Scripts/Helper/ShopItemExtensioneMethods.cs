@@ -12,5 +12,15 @@ namespace Assets.Scripts.Helper
         {
             return shopItems.OrderBy((item) => item.Category).ToList();
         }
+
+        public static List<ShopItemModel> FilterByCategory(this List<ShopItemModel> shopItems, ShopItemModel.ItemCategory category)
+        {
+            return shopItems.Where((item) => item.Category == category).ToList();
+        }
+
+        public static List<ShopItemModel> FilterByStatus(this List<ShopItemModel> shopItems, ShopItemModel.ItemStatus status)
+        {
+            return shopItems.Where((item) => item.Status == status).ToList();
+        }
     }
 }

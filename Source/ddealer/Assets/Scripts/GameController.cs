@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
     public GameObject[] _buildingPatterns; // Prefabs of buildings patterns
     [SerializeField]
     private GameObject _customer; // Prefab of a customer
-    private int _backpack = 999;
+    private int _backpack = AppData.Instance.BackpackLoad;
     private int _score = 0;
 
     private void Awake()
@@ -33,6 +33,8 @@ public class GameController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        DontDestroyOnLoad(this.gameObject);
     }
 
     // Start is called before the first frame update
@@ -42,8 +44,7 @@ public class GameController : MonoBehaviour
         GameUIManager.Instance.SetScoreText(_score);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
         CheckClickOnCustomer();
     }
@@ -116,7 +117,7 @@ public class GameController : MonoBehaviour
     }
 
     /// <summary>
-    /// Seeling action -> Remove one element from backpack and money value add to score
+    /// Selling action -> Remove one element from backpack and money value add to score
     /// </summary>
     public void AddScore()
     {
