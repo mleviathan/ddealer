@@ -8,6 +8,7 @@ public class AppData : MonoBehaviour
     private static AppData _instance;
 
     private int _money;
+    private int _backpackLoad;
 
     public int Money
     {
@@ -18,7 +19,15 @@ public class AppData : MonoBehaviour
             OnMoneySet(value);
         }
     }
-    public int BackpackLoad { get; set; }
+    public int BackpackLoad
+    {
+        get => _backpackLoad;
+        set
+        {
+            _backpackLoad = value;
+            OnLoadSet(value);
+        }
+    }
     public List<ShopItemModel> ShopItems { get; set; }
 
     void Awake()
@@ -47,6 +56,13 @@ public class AppData : MonoBehaviour
             mainMenuMgr.SetMoneyText(newValue);
 
         PrefsHelper.Money = newValue;
+    }
+
+    public void OnLoadSet(int newValue)
+    {
+        var mainMenuMgr = FindObjectOfType<MainMenuManager>();
+        if (mainMenuMgr != null)
+            mainMenuMgr.SetLoadText(newValue);
     }
 
 }

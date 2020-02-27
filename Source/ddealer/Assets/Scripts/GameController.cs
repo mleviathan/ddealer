@@ -20,7 +20,7 @@ public class GameController : MonoBehaviour
     public GameObject[] _buildingPatterns; // Prefabs of buildings patterns
     [SerializeField]
     private GameObject _customer; // Prefab of a customer
-    private int _backpack = AppData.Instance.BackpackLoad;
+    private int _backpack = 0;
     private int _score = 0;
 
     private void Awake()
@@ -35,6 +35,8 @@ public class GameController : MonoBehaviour
         }
 
         DontDestroyOnLoad(this.gameObject);
+
+        _backpack = AppData.Instance.BackpackLoad;
     }
 
     // Start is called before the first frame update

@@ -30,7 +30,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField]
     private GameObject _preGameDrugPrefab;
     [SerializeField]
-    private TextMeshProUGUI _backpackLoadText;
+    private List<TextMeshProUGUI> _backpackLoadTexts;
 
     private ShopItemModel _selectedDrug;
 
@@ -53,9 +53,6 @@ public class MainMenuManager : MonoBehaviour
         _shopItems = PrefsHelper.ShopItems.OrderByCategory();
         CreateShopItems();
     }
-
-    
-
 
     /// <summary>
     /// Loads Game scene
@@ -113,6 +110,7 @@ public class MainMenuManager : MonoBehaviour
     /// </summary>
     private void CreateEquipmentItems()
     {
+        _shopItems = PrefsHelper.ShopItems;
         var equipMenuGrid = _preGameMenu.transform.Find("ScrollView - Equip").GetChild(0);
         var txtBpLoad = _preGameMenu.transform.Find("Text - Helper").GetChild(0).GetComponent<TextMeshProUGUI>();
         txtBpLoad.text = AppData.Instance.BackpackLoad.ToString();
@@ -177,8 +175,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void BuyItem(int id)
     {
-        ShopItemModel item = PrefsHelper.ShopItems.First((it) => it.Id == id);
-        if (AppData.Instance.Money >= item.Cost)
+        ShopItemModel item = PrefsHelper.ShopItems.FirstOrDefault((it) => it.Id == id);
+        if (item != null && AppData.Instance.Money >= item.Cost)
         {
             var shopItemsCopy = PrefsHelper.ShopItems;
             shopItemsCopy.Remove(item);
@@ -250,6 +248,14 @@ public class MainMenuManager : MonoBehaviour
     public void SetMoneyText(int value)
     {
         _moneyText.text = value.ToString();
+    }
+
+    public void SetLoadText(int value)
+    {
+        foreach(var bpLoadText in _backpackLoadTexts)
+        {
+            bpLoadText.text = value.ToString();
+        }
     }
 
 }
