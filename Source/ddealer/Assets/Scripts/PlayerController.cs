@@ -61,10 +61,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void Slow()
     {
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        _playerRigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
         _isSlowing = true;
         _fadingRoutine = StartCoroutine(InvincibilityFade());
-        Invoke("FreezePosX", 1f);
+        Invoke("FreezePosX", .8f);
     }
 
     /// <summary>
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
     /// <returns></returns>
     IEnumerator InvincibilityFade()
     {
-        for (; ; )
+        for (; ;)
         {
             Color c = _spriteRenderer.color;
             if (c.a > 0)
@@ -116,12 +116,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void FreezePosX()
     {
-        if (GetComponent<Rigidbody2D>().constraints != RigidbodyConstraints2D.FreezePositionX)
-            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePositionX;
+        if (_playerRigidBody.constraints != RigidbodyConstraints2D.FreezePositionX)
+            _playerRigidBody.constraints = RigidbodyConstraints2D.FreezePositionX;
 
         _isSlowing = false;
         StopCoroutine(_fadingRoutine);
-        
     }
 
     private void ResetSpriteAlpha()

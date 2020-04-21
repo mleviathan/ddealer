@@ -36,7 +36,11 @@ public class GameController : MonoBehaviour
 
         DontDestroyOnLoad(this.gameObject);
 
+#if !UNITY_EDITOR
         _backpack = AppData.Instance.BackpackLoad;
+#else
+        _backpack = 0;
+#endif
     }
 
     // Start is called before the first frame update
@@ -59,9 +63,12 @@ public class GameController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             var clickPos = Input.mousePosition;
-            RaycastHit2D hit = Physics2D.Raycast(new Vector2(Camera.main.ScreenToWorldPoint(clickPos).x, Camera.main.ScreenToWorldPoint(clickPos).y), Vector2.zero, 0);
+            Vector3 worldPointClick = Camera.main.ScreenToWorldPoint(clickPos);
+            Debug.Log(worldPointClick);
+            RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPointClick.x, worldPointClick.y), Vector2.zero, 0);
             if (hit)
             {
+                Debug.Log(hit.collider.tag);
                 if (hit.collider.CompareTag("Customer"))
                 {
                     Destroy(hit.collider.gameObject);
