@@ -23,7 +23,7 @@ public class GameInitializer {
     /// </summary>
     public void InitializePlayerValues()
     {
-        AppData.Instance.Money = 100;
+        GameController.Instance.Money = 100;
     }
 
     /// <summary>
@@ -86,7 +86,7 @@ public class GameInitializer {
             Image = "",
             Status = ShopItemModel.ItemStatus.Equipped,
             Category = ShopItemModel.ItemCategory.Backpack,
-            Load = 10
+            Load = 20
         };
         backpacks.Add(starter);
         return backpacks;
