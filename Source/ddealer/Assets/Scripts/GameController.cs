@@ -1,25 +1,33 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    private const float INCREMENTAL_DIFFICULTY = 0.1f;
+    /// <summary>
+    /// Time between the update of difficulty
+    /// </summary>
+    public const float SECONDS_BETWEEN_DIFFICULTY_UPDATE = 1F;
     public static GameController Instance { get => _instance; }
     private static GameController _instance;
 
     public bool GameOver { get; set; } = false;
 
-    public float ScrollSpeed; // Speed at which the elements will move
+    public float BackgroundScrollSpeed; // Speed at which the elements will move
     public float JumpForce; // Force used to jump both for player and enemy
+    public float FloorScrollSpeed;
+    public ScrollingBehaviour ScrollingBehaviour;
 
     [SerializeField]
     private Transform _obstacleSpawner; // Position where to spawn elements like buildings and obstacles
     [SerializeField]
-    private Transform _buildingSpawner; // Position where to spawn elements like buildings and obstacles
+    private Transform _customerSpawner; // Position where to spawn elements like buildings and obstacles
     [SerializeField]
     private GameObject[] _obstaclePatterns; // Prefabs of obstacles patterns
     [SerializeField]
-    public GameObject[] _buildingPatterns; // Prefabs of buildings patterns
-    [SerializeField]
     private GameObject _customer; // Prefab of a customer
+
+
     private int _backpack = 0;
     private int _score = 0;
 
@@ -46,39 +54,15 @@ public class GameController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        GameUIManager.Instance.SetBackpackText(_backpack);
-        GameUIManager.Instance.SetScoreText(_score);
-    }
-
-    private void FixedUpdate()
-    {
-        CheckClickOnCustomer();
-    }
-
-    /// <summary>
-    /// TO-DO: find a way to attach the script to the Customer object?
-    /// </summary>
-    private void CheckClickOnCustomer()
-    {
-        if (Input.GetMouseButtonDown(0))
+        if (GameUIManager.Instance != null)
         {
-            var clickPos = Input.mousePosition;
-            Vector3 worldPointClick = Camera.main.ScreenToWorldPoint(clickPos);
-            Debug.Log(worldPointClick);
-            RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPointClick.x, worldPointClick.y), Vector2.zero, 0);
-            if (hit)
-            {
-                Debug.Log(hit.collider.tag);
-                if (hit.collider.CompareTag("Customer"))
-                {
-                    Destroy(hit.collider.gameObject);
-                    _backpack -= 1;
-                    _score += 1;
-                    GameUIManager.Instance.SetBackpackText(_backpack);
-                    GameUIManager.Instance.SetScoreText(_score);
-                }
-            }
+            GameUIManager.Instance.SetBackpackText(_backpack);
+            GameUIManager.Instance.SetScoreText(_score);
         }
+
+        StartCoroutine("IncreaseDifficulty");
+        StartCoroutine("SpawnObstacles");
+        StartCoroutine("SpawnCustomers");
     }
 
     /// <summary>
@@ -87,42 +71,24 @@ public class GameController : MonoBehaviour
     /// </summary>
     public void SpawnRandomObstacle()
     {
-        var rand = Random.Range(0, _obstaclePatterns.Length);
-
-        Instantiate(_obstaclePatterns[rand], new Vector3(_obstacleSpawner.position.x, _obstacleSpawner.position.y), Quaternion.identity);
-    }
-
-    /// <summary>
-    /// Create random obstacles randomly sorting from BuildingPatterns
-    /// And spawning them in Spawner position (x, y)
-    /// Also create some customers in its windows
-    /// </summary>
-    public void SpawnRandomBuilding()
-    {
-        var rand = Random.Range(0, _buildingPatterns.Length);
-        GameObject buildingPattern = _buildingPatterns[rand];
-        var patternGO = Instantiate(buildingPattern, new Vector3(_buildingSpawner.position.x, _buildingSpawner.position.y), Quaternion.identity);
-
-        var buildingQty = patternGO.transform.childCount;
-        int customersSpawned = 0;
-
-        for (var bui = 0; bui < buildingQty; bui++)
+        if (_obstaclePatterns.Length > 0)
         {
-            Transform building = patternGO.transform.GetChild(bui);
-            int windowsQty = building.childCount;
+            var rand = Random.Range(0, _obstaclePatterns.Length);
 
-            for (var win = 0; win < windowsQty; win++)
+            GameObject instantiatedObstaclePattern = Instantiate(_obstaclePatterns[rand], new Vector3(_obstacleSpawner.position.x, _obstacleSpawner.position.y), Quaternion.identity, _obstacleSpawner);
+
+            for (var i = 0; i < instantiatedObstaclePattern.transform.childCount; i++)
             {
-                Transform window = building.transform.GetChild(win);
-                bool spawn = Random.Range(0, 2) == 1 ? true : false; // "Dice roll" to estabilish if in this window will be spawned a customer
-
-                if (spawn)
-                {
-                    Instantiate(_customer, new Vector3(window.position.x, window.position.y), Quaternion.identity, window);
-                    customersSpawned++;
-                }
+                ScrollingBehaviour.AddObstacleObject(instantiatedObstaclePattern.transform.GetChild(i).gameObject);
             }
         }
+    }
+
+    public void SpawnRandomCustomer()
+    {
+        GameObject instantiatedCustomer = Instantiate(_customer, new Vector3(_customerSpawner.position.x, _customerSpawner.position.y), Quaternion.identity, _customerSpawner);
+
+        ScrollingBehaviour.AddCustomerObject(instantiatedCustomer);
     }
 
     /// <summary>
@@ -136,4 +102,38 @@ public class GameController : MonoBehaviour
         GameUIManager.Instance.SetScoreText(_score);
     }
 
+    public void SetGameOver(bool gameOver)
+    {
+        this.GameOver = gameOver;
+    }
+
+    private IEnumerator IncreaseDifficulty()
+    {
+        for (; ; )
+        {
+            BackgroundScrollSpeed += -INCREMENTAL_DIFFICULTY;
+            FloorScrollSpeed += -INCREMENTAL_DIFFICULTY;
+
+            ScrollingBehaviour.OnIncreaseDifficulty?.Invoke();
+            yield return new WaitForSeconds(SECONDS_BETWEEN_DIFFICULTY_UPDATE);
+        }
+    }
+
+    private IEnumerator SpawnObstacles()
+    {
+        for (; ; )
+        {
+            this.SpawnRandomObstacle();
+            yield return new WaitForSeconds(3f);
+        }
+    }
+
+    private IEnumerator SpawnCustomers()
+    {
+        for (; ; )
+        {
+            this.SpawnRandomCustomer();
+            yield return new WaitForSeconds(5f);
+        }
+    }
 }

@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Obstacle
   - Customer
+  - Background
   layers:
   - Default
   - TransparentFX

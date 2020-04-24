@@ -53,18 +53,19 @@ public class PlayerController : MonoBehaviour
         {
             _obstacle = collision.gameObject;
             Slow();
+            this.transform.position = new Vector2(this.transform.position.x + collision.bounds.size.x, this.transform.position.y);
         }
     }
 
     /// <summary>
-    /// MAkes the player fall back disabling the Pos X constraint on the rigidbody
+    /// Makes the player fall back disabling the Pos X constraint on the rigidbody
     /// </summary>
     private void Slow()
     {
         _playerRigidBody.constraints = RigidbodyConstraints2D.FreezeRotation;
         _isSlowing = true;
         _fadingRoutine = StartCoroutine(InvincibilityFade());
-        Invoke("FreezePosX", .8f);
+        Invoke("FreezePosX", 1f);
     }
 
     /// <summary>
@@ -101,7 +102,8 @@ public class PlayerController : MonoBehaviour
     {
         _isDead = true;
         GameUIManager.Instance.ShowDeathMenu();
-        GameController.Instance.GameOver = true;
+        GameController.Instance.SetGameOver(true);
+        this.gameObject.SetActive(false);
     }
 
     private void Jump()
@@ -120,7 +122,9 @@ public class PlayerController : MonoBehaviour
             _playerRigidBody.constraints = RigidbodyConstraints2D.FreezePositionX;
 
         _isSlowing = false;
+
         StopCoroutine(_fadingRoutine);
+        this.ResetSpriteAlpha();
     }
 
     private void ResetSpriteAlpha()

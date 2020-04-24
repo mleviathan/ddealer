@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class BackgroundRepeater : MonoBehaviour
 {
     private BoxCollider2D _groundCollider;        
@@ -10,8 +11,8 @@ public class BackgroundRepeater : MonoBehaviour
     //Awake is called before Start.
     private void Awake()
     {
-        _groundCollider = GetComponent<BoxCollider2D>();
-        _groundHorizontalLength = _groundCollider.size.x;
+        _groundCollider = this.GetComponent<BoxCollider2D>();
+        _groundHorizontalLength = _groundCollider.size.x * 1.5f; // Fine tuned for our backgrounds
     }
 
     //Update runs once per frame
@@ -25,13 +26,8 @@ public class BackgroundRepeater : MonoBehaviour
 
     private void RepositionBackground()
     {
-        Vector2 groundOffSet = new Vector2(_groundHorizontalLength * 2f, 0);
+        Vector2 groundOffSet = new Vector2(_groundHorizontalLength * 2.5f, 0); // Fine tuned for our backgrounds
 
         transform.position = (Vector2)transform.position + groundOffSet;
-
-        GameController.Instance.SpawnRandomObstacle();
-        GameController.Instance.SpawnRandomBuilding();
     }
-
-    
 }
