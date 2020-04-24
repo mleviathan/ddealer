@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -64,5 +65,4 @@ public class AppData : MonoBehaviour
         if (mainMenuMgr != null)
             mainMenuMgr.SetLoadText(newValue);
     }
-
 }

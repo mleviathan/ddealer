@@ -27,7 +27,6 @@ public class CustomerBehaviour : MonoBehaviour
             RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPointClick.x, worldPointClick.y), Vector2.zero, 0);
             if (hit)
             {
-                Debug.Log(hit.collider.tag);
                 if (hit.collider.CompareTag("Customer"))
                 {
                     Destroy(hit.collider.gameObject);

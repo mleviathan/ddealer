@@ -23,7 +23,7 @@ public class GameInitializer {
     /// </summary>
     public void InitializePlayerValues()
     {
-        GameController.Instance.Money = 100;
+        AppData.Instance.Money = 100;
     }
 
     /// <summary>
