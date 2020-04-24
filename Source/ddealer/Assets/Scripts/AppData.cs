@@ -45,8 +45,11 @@ public class AppData : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         Money = PrefsHelper.Money;
-        BackpackLoad = PrefsHelper.ShopItems.First((bp) => bp.Category == ShopItemModel.ItemCategory.Backpack
-                                                    && bp.Status == ShopItemModel.ItemStatus.Equipped).Load;
+        if (PrefsHelper.ShopItems != null)
+        {
+            BackpackLoad = PrefsHelper.ShopItems.FirstOrDefault((bp) => bp.Category == ShopItemModel.ItemCategory.Backpack
+                                                        && bp.Status == ShopItemModel.ItemStatus.Equipped).Load;
+        }
         ShopItems = PrefsHelper.ShopItems;
     }
 

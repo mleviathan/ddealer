@@ -22,8 +22,8 @@ public static class PrefsHelper
         {
             if (value != null)
             {
+                Debug.Log(JsonConvert.SerializeObject(value));
                 PlayerPrefs.SetString(SHOP_ITEMS_KEY, JsonConvert.SerializeObject(value));
-                PlayerPrefs.Save();
             }
         }
     }
@@ -40,7 +40,6 @@ public static class PrefsHelper
         set
         {
             PlayerPrefs.SetInt(FIRST_LAUNCH, value ? 1 : 0);
-            PlayerPrefs.Save();
         }
     }
 
@@ -56,7 +55,6 @@ public static class PrefsHelper
         set
         {
             PlayerPrefs.SetInt(MONEY, value);
-            PlayerPrefs.Save();
         }
     }
 

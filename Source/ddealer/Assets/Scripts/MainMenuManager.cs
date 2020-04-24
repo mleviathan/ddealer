@@ -38,18 +38,20 @@ public class MainMenuManager : MonoBehaviour
     {
         // Carico gli item dello shop
         // Rimuovere questo if quando avremo una splash
-        if (PrefsHelper.IsFirstLaunch)
-        {
-            GameInitializer initializer = new GameInitializer();
-            initializer.InitializePlayerValues();
-            initializer.InitializeShopItems();
+        //if (PrefsHelper.IsFirstLaunch)
+        //{
+            
             //_moneyText.text = AppData.Instance.Money.ToString();
-        }
+        //}
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        GameInitializer initializer = new GameInitializer();
+        initializer.InitializePlayerValues();
+        initializer.InitializeShopItems();
+
         _shopItems = PrefsHelper.ShopItems.OrderByCategory();
         CreateShopItems();
     }
