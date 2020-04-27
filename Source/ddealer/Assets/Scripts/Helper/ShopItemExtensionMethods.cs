@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Helper
 {
-    public static class ShopItemExtensioneMethods
+    public static class ShopItemExtensionMethods
     {
         public static List<ShopItemModel> OrderByCategory(this List<ShopItemModel> shopItems)
         {

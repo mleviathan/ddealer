@@ -50,6 +50,7 @@ public class AppData : MonoBehaviour
             BackpackLoad = PrefsHelper.ShopItems.FirstOrDefault((bp) => bp.Category == ShopItemModel.ItemCategory.Backpack
                                                         && bp.Status == ShopItemModel.ItemStatus.Equipped).Load;
         }
+
         ShopItems = PrefsHelper.ShopItems;
     }
 
